@@ -48,13 +48,13 @@ def test_shop():
 
     driver.find_element(By.CSS_SELECTOR, "#checkout").click()
 
-    driver.find_element(By.CSS_SELECTOR, 'firstName').send_keys("Oxana")
-    driver.find_element(By.CSS_SELECTOR, '#lastName').send_keys("Petunina")
-    driver.find_element(By.CSS_SELECTOR, '#postal-code').send_keys("614051")
+    driver.find_element(By.CSS_SELECTOR, '[data-test="firstName"]').send_keys("Oxana")
+    driver.find_element(By.CSS_SELECTOR, '[data-test="lastName"]').send_keys("Petunina")
+    driver.find_element(By.CSS_SELECTOR, '[data-test="postalCode"]').send_keys("614051")
 
     driver.find_element(By.CSS_SELECTOR, "#continue").click()
 
-    total = driver.find_element(By.CSS_SELECTOR, "#summary_total_label").text
+    total = driver.find_element(By.CSS_SELECTOR, ".summary_total_label").text
     total_prise = float(total.split("$")[1])
     print(total_prise)
 
