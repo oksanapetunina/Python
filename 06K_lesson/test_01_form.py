@@ -13,20 +13,20 @@ def test_fill_form():
         "https://bonigarcia.dev/selenium-webdriver-java/data-types.html")
 
     WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, "#first-name"))
+        EC.presence_of_element_located((By.NAME, "first-name"))
     )
-    driver.find_element(By.CSS_SELECTOR, "#first-name").send_keys("Иван")
-    driver.find_element(By.CSS_SELECTOR, "#last-name").send_keys("Петров")
-    driver.find_element(By.CSS_SELECTOR, "#address").send_keys("Ленина, 55-3")
-    driver.find_element(By.CSS_SELECTOR, "#e-mail").send_keys("test@skypro.com")
-    driver.find_element(By.CSS_SELECTOR, "#phone").send_keys("+7985899998787")
-    driver.find_element(By.CSS_SELECTOR, "#zip-code").send_keys("")
-    driver.find_element(By.CSS_SELECTOR, "#city").send_keys("Москва")
-    driver.find_element(By.CSS_SELECTOR, "#country").send_keys("Россия")
-    driver.find_element(By.CSS_SELECTOR, "#job-position").send_keys("QA")
-    driver.find_element(By.CSS_SELECTOR, "#company").send_keys("SkyPro")
+    driver.find_element(By.NAME, "first-name").send_keys("Иван")
+    driver.find_element(By.NAME, "last-name").send_keys("Петров")
+    driver.find_element(By.NAME, "address").send_keys("Ленина, 55-3")
+    driver.find_element(By.NAME, "e-mail").send_keys("test@skypro.com")
+    driver.find_element(By.NAME, "phone").send_keys("+7985899998787")
+    driver.find_element(By.NAME, "zip-code").send_keys("")
+    driver.find_element(By.NAME, "city").send_keys("Москва")
+    driver.find_element(By.NAME, "country").send_keys("Россия")
+    driver.find_element(By.NAME, "job-position").send_keys("QA")
+    driver.find_element(By.NAME, "company").send_keys("SkyPro")
 
-    driver.find_element(By.CSS_SELECTOR, "#submit-button").click()
+    driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
 
     zip_code_field = driver.find_element(By.ID, 'zip-code')
     assert "error" in zip_code_field.get_attribute(
