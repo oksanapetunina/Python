@@ -2,13 +2,10 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from webdriver_manager.microsoft import EdgeChromiumDriverManager
-from selenium.webdriver.edge.service import Service
 
 
 def test_fill_form():
-    service = Service(EdgeChromiumDriverManager().install())
-    driver = webdriver.Edge(service=service)
+    driver = webdriver.Edge()
     driver.get(
         "https://bonigarcia.dev/selenium-webdriver-java/data-types.html")
 
@@ -29,7 +26,7 @@ def test_fill_form():
     driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
 
     zip_code_field = driver.find_element(By.ID, 'zip-code')
-    assert "error" in zip_code_field.get_attribute(
+    assert "alert-danger" in zip_code_field.get_attribute(
         "class"), "Поле Zip code не подсвечено красным"
 
     fields = driver.find_elements(By.CSS_SELECTOR, "input")
