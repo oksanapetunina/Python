@@ -14,21 +14,21 @@ class CardPage:
         backpack.click()
 
     def bay(self):
-        t_shirt = self.driver.until(
+        t_shirt = self.wait.until(
             EC.element_to_be_clickable((
                 By.CSS_SELECTOR, "#add-to-cart-sauce-labs-bolt-t-shirt")))
         t_shirt = self.driver.find_element(
             By.CSS_SELECTOR, "#add-to-cart-sauce-labs-bolt-t-shirt")
         t_shirt.click()
 
-        onesie = self.driver.until(
+        onesie = self.wait.until(
             EC.element_to_be_clickable((
                 By.CSS_SELECTOR, "#add-to-cart-sauce-labs-onesie")))
         onesie = self.driver.find_element(
             By.CSS_SELECTOR, "#add-to-cart-sauce-labs-onesie")
         onesie.click()
 
-        basket = self.driver.until(
+        basket = self.wait.until(
             EC.element_to_be_clickable((
                 By.CSS_SELECTOR, "#shopping_cart_container"))
             )
