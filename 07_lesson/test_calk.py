@@ -1,25 +1,37 @@
-import pytest
 from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from calk_page import CalculatorPage
+import pytest
 
 
-@pytest.fixture()
+@pytest.fixture
 def driver():
     driver = webdriver.Chrome()
-    driver.implicitly_wait(10)
-    driver.get("https://bonigarcia.dev/selenium-webdriver-java/slow-calculator.html")
     yield driver
     driver.quit()
 
 
 def test_calculator(driver):
-    calc_page = CalculatorPage(driver)
-    calc_page.delay_input("45")
-    calc_page.click_button("7")
-    calc_page.click_button("+")
-    calc_page.click_button("8")
-    calc_page.click_button("=")
-    calc_page.get_result()
+    calculator_page = CalculatorPage(driver)
+    calculator_page.open_page(
+        "https://bonigarcia.dev/selenium-webdriver-java/slow-calculator.html")
+    calculator_page.enter_delay_value("45")
+    calculator_page.click_button("7")
+    calculator_page.click_operator_button("+")
+    calculator_page.click_button("8")
+    calculator_page.click_equals_button()
 
-    result = calc_page.get_result()
-    assert result == '15', f"Expected result to be '15', but got '{result}'."
+    result = calculator_page.get_result_text()
+
+    result_element = driver.find_element(By.CSS_SELECTOR, "div.screen")
+    result = result_element.text.strip()
+
+    WebDriverWait(driver, 46).until(
+        EC.text_to_be_present_in_element((
+            By.CSS_SELECTOR, "div.screen"), "15"))
+
+    result_element = driver.find_element(By.CSS_SELECTOR, "div.screen")
+    result = result_element.text.strip()
+    assert result == "15"
