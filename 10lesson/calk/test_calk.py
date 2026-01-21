@@ -1,46 +1,62 @@
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from calk_page import CalculatorPage
 import pytest
+from selenium import webdriver
+from calk_page import  CalcMainPage
 import allure
 
 
 @pytest.fixture
 def driver():
+    """
+    Фикстура для инициализации и завершения работы драйвера.
+    """
     driver = webdriver.Chrome()
+    driver.maximize_window()
     yield driver
     driver.quit()
 
-@allure.title("Тест калькулятора")
-@allure.description("Вызов онлайн калькулятора и выполнение действий")
-@allure.feature("READ")
+
+@pytest.mark.parametrize(
+    "num1, operation, num2, expected_result, delay",
+    [
+        ("7", "+", "8", "15", 15),
+        ("9", "-", "3", "6", 10),
+        ("4", "x", "5", "20", 20),
+        ("8", "÷", "2", "4", 5),
+    ],
+)
+@allure.title("Тестирование калькулятора: {num1} {operation} {num2} "
+              "= {expected_result}")
+@allure.description("Тест проверяет корректность работу калькулятора "
+                    "с различными операциями.")
+@allure.feature("Калькулятор")
 @allure.severity(allure.severity_level.CRITICAL)
-def test_calculator(driver):
-    calculator_page = CalculatorPage(driver)
-    calculator_page.open_page(
-        "https://bonigarcia.dev/selenium-webdriver-java/slow-calculator.html")
-    with allure.step("установка задержки 45 секунд"):
-        calculator_page.enter_delay_value("45")
-    with allure.step("ввод числа 7"):    
-        calculator_page.click_button("7")
-    with allure.step("ввод знака сложение"):
-        calculator_page.click_operator_button("+")
-    with allure.step("ввод числа 8"):
-        calculator_page.click_button("8")
-    with allure.step("ввод знака равно"):
-        calculator_page.click_equals_button()
+def test_calculator_flow(driver, num1, operation,
+                         num2, expected_result, delay):
+    """
+    Тест проверяет работу калькулятора с различными операциями.
 
-    result = calculator_page.get_result_text()
+    :param driver: WebDriver — объект драйвера, переданный фикстурой.
+    :param num1: str — первое число для операции.
+    :param operation: str — операция (+, -, x, ÷).
+    :param num2: str — второе число для операции.
+    :param expected_result: str — ожидаемый результат операции.
+    :param delay: int — задержка в секундах для выполнения операции.
+    """
+    main_page = CalcMainPage(driver)
 
-    result_element = driver.find_element(By.CSS_SELECTOR, "div.screen")
-    result = result_element.text.strip()
+    with allure.step("Открытие страницы калькулятора"):
+        main_page.open()
 
-    WebDriverWait(driver, 46).until(
-        EC.text_to_be_present_in_element((
-            By.CSS_SELECTOR, "div.screen"), "15"))
+    with allure.step(f"Установка задержки {delay} секунд"):
+        main_page.set_delay(delay)
 
-    result_element = driver.find_element(By.CSS_SELECTOR, "div.screen")
-    result = result_element.text.strip()
-    assert result == "15"
+    with allure.step(f"Нажатие кнопок: {num1}, {operation}, {num2}, '='"):
+        main_page.click_buttons([num1, operation, num2, "="])
+
+    with allure.step(f"Ожидание результата {expected_result}"):
+        main_page.wait_for_result(expected_result, delay)
+
+    with allure.step("Проверка результата"):
+        assert main_page.get_result() == expected_result, \
+            (f"Ожидаемый результат: {expected_result}, "
+             f"но получен: {main_page.get_result()}")
